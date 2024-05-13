@@ -4,32 +4,10 @@
     <meta charset="UTF-8">
     <title>일정관리 앱</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/static/css/style.css">
+    <script th:src="@{/js/script.js}" src="/static/js/script.js"></script>
 
-        .wrap {
-            width: 900px;
-            margin: 0 auto;
-            padding: 10px;
-            background: aqua;
-        }
-        .wrap > div {
-            padding: 10px;
-        }
-        .detail_top {
-            font-size: 30px;
-        }
-        .detail_content{
-        }
-        .detail_bottom {
-            display: flex;
-            justify-content: space-between;
-        }
-    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 <div class="wrap">
