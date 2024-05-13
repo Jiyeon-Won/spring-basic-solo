@@ -2,15 +2,102 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>일정관리 앱</title>
+
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/css/style.css">-->
+    <!--    <script th:src="@{/js/script.js}" src="/js/script.js"></script>-->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
-    <script th:src="@{/js/script.js}"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-    <title>TODO</title>
+        .wrap {
+            width: 900px;
+            margin: 0 auto;
+            padding: 10px 10px 0 10px;
+            background: aqua;
+        }
+
+        .card {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            width: 260px;
+            height: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+            gap: 10px;
+            background: bisque;
+            cursor: pointer;
+        }
+        .item .item_content {
+            flex-grow: 1;
+        }
+        .item .item_bottom {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
 </head>
 <body>
+<div class="wrap">
+    <h1>일정 관리</h1><br>
+    <div class="card">
+        <div class="item" onclick="location.href='detail.html?page=1'">
+            <input type="hidden" class="item_id" value="1">
+            <div class="item_title">제목</div>
+            <hr>
+            <div class="item_content">내용</div>
+            <hr>
+            <div class="item_bottom">
+                <div>담당자</div>
+                <div>2024-05-13 22:22</div>
+            </div>
+        </div>
+        <div class="item">
+            <input type="hidden" class="item_id" value="">
+            <div class="item_title">제목</div>
+            <hr>
+            <div class="item_content">내용</div>
+            <hr>
+            <div class="item_bottom">
+                <div>담당자</div>
+                <div>2024-05-13 22:22</div>
+            </div>
+        </div>
+        <div class="item">
+            <input type="hidden" class="item_id" value="">
+            <div class="item_title">제목</div>
+            <hr>
+            <div class="item_content">내용</div>
+            <hr>
+            <div class="item_bottom">
+                <div>담당자</div>
+                <div>2024-05-13 22:22</div>
+            </div>
+        </div>
+        <div class="item">
+            <input type="hidden" class="item_id" value="">
+            <div class="item_title">제목</div>
+            <hr>
+            <div class="item_content">내용</div>
+            <hr>
+            <div class="item_bottom">
+                <div>담당자</div>
+                <div>2024-05-13 22:22</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+</script>
 </body>
 </html>
