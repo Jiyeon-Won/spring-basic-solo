@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>일정관리 앱</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" href="/static/css/style.css">
+    <script th:src="@{/js/script.js}" src="/static/js/script.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="wrap">
+    <h1>글쓰기</h1>
+    <form action="/todo" class="write_form" method="post">
+        <label for="title">제목</label>
+        <input type="text" name="title" id="title">
+        <label for="content">내용</label>
+        <textarea name="content" id="content"></textarea>
+        <label for="person">담당자</label>
+        <input type="text" name="person" id="person">
+        <label for="password">비밀번호</label>
+        <input type="password" id="password">
+        <button type="submit">저장하기</button>
+    </form>
+</div>
+</body>
+</html>
