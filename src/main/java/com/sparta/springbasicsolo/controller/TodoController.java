@@ -86,4 +86,17 @@ public class TodoController {
         }
         return null;
     }
+
+    // 일정 수정
+    @PutMapping("/todo/{id}")
+    public TodoDTO updateTodo(@PathVariable Long id, @RequestBody TodoDTO todoDTO) {
+        todoDTO.setId(id);
+        log.info("입력한 todoDTO: {}", todoDTO);
+        Optional<TodoDTO> updateTodo = todoService.updateTodo(todoDTO);
+        log.info("수정한 todoDTO: {}", updateTodo);
+        if (updateTodo.isPresent()) {
+            return updateTodo.get();
+        }
+        return null;
+    }
 }

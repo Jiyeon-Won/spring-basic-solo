@@ -11,4 +11,6 @@ public interface TodoRepository {
     Optional<TodoDTO> findById(Long id);
 
     List<TodoDTO> findAll();
+
+    int updateTodo(TodoDTO todoDTO);
 }

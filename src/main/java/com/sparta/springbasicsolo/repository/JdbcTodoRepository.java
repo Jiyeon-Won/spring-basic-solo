@@ -70,6 +70,21 @@ public class JdbcTodoRepository implements TodoRepository {
         return template.query(sql, getTodoDTORowMapper());
     }
 
+    @Override
+    public int updateTodo(TodoDTO todoDTO) {
+        String sql = "UPDATE todo SET title = :title, content = :content, person = :person, password = :password"
+                + " WHERE id = :id";
+
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("title", todoDTO.getTitle())
+                .addValue("content", todoDTO.getContent())
+                .addValue("person", todoDTO.getPerson())
+                .addValue("password", todoDTO.getPassword())
+                .addValue("id", todoDTO.getId());
+
+        return template.update(sql, param);
+    }
+
     private BeanPropertyRowMapper<TodoDTO> getTodoDTORowMapper() {
         return new BeanPropertyRowMapper<>(TodoDTO.class);
     }
