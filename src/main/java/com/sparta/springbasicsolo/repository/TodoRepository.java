@@ -13,4 +13,6 @@ public interface TodoRepository {
     List<TodoDTO> findAll();
 
     int updateTodo(TodoDTO todoDTO);
+
+    void deleteTodo(Long id);
 }

@@ -85,6 +85,19 @@ public class JdbcTodoRepository implements TodoRepository {
         return template.update(sql, param);
     }
 
+    @Override
+    public void deleteTodo(Long id) {
+        String sql = "DELETE FROM todo WHERE id = :id";
+
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", id);
+
+        int deletedRowCount = template.update(sql, param);
+        if (deletedRowCount == 0) {
+            // 삭제가 안 됐을 때
+        }
+    }
+
     private BeanPropertyRowMapper<TodoDTO> getTodoDTORowMapper() {
         return new BeanPropertyRowMapper<>(TodoDTO.class);
     }

@@ -34,13 +34,23 @@ public class TodoService {
         if (findTodo.isPresent()) {
             if (Objects.equals(findTodo.get().getPassword(), todoDTO.getPassword())) {
                 log.info("비밀번호 일치함. 업데이트 진행");
-                int updatedColumnCount = todoRepository.updateTodo(todoDTO);
-                if (updatedColumnCount == 1) {
+                int updatedRowCount = todoRepository.updateTodo(todoDTO);
+                if (updatedRowCount == 1) {
                     return todoRepository.findById(todoDTO.getId());
                 }
                 return Optional.empty();
             }
         }
         return Optional.empty();
+    }
+
+    public void deleteTodo(Long id, String password) {
+        Optional<TodoDTO> findTodo = todoRepository.findById(id);
+        if (findTodo.isPresent()) {
+            if (Objects.equals(findTodo.get().getPassword(), password)) {
+                log.info("비밀번호 일치함. 삭제 진행");
+                todoRepository.deleteTodo(id);
+            }
+        }
     }
 }

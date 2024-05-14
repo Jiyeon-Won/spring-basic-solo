@@ -2,14 +2,12 @@ package com.sparta.springbasicsolo.controller;
 
 import com.sparta.springbasicsolo.TodoDTO;
 import com.sparta.springbasicsolo.service.TodoService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -98,5 +96,13 @@ public class TodoController {
             return updateTodo.get();
         }
         return null;
+    }
+
+    // 일정 삭제
+    @DeleteMapping("/todo/{id}")
+    public void deleteTodo(@PathVariable Long id, @RequestBody Map<String, String> map) {
+        String password = map.get("password");
+        log.info("입력한 id:{}, password:{}", id, password);
+        todoService.deleteTodo(id, password);
     }
 }
