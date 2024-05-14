@@ -24,7 +24,7 @@ public class JdbcTodoRepository implements TodoRepository {
     private final NamedParameterJdbcTemplate template;
 
     @Override
-    public Long addTodo(TodoDTO todoDTO) {
+    public Optional<TodoDTO> addTodo(TodoDTO todoDTO) {
         todoDTO.setCreatedDateTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
 
         String sql = "INSERT INTO todo (title, content, person, password, created_date_time)"
@@ -38,15 +38,18 @@ public class JdbcTodoRepository implements TodoRepository {
                 .addValue("created_date_time", todoDTO.getCreatedDateTime());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(sql, param, keyHolder);
+        int update = template.update(sql, param, keyHolder);
 
-        long key = keyHolder.getKey().longValue();
-        todoDTO.setId(key);
-        return key;
+        if (update == 1) {
+            long key = keyHolder.getKey().longValue();
+            todoDTO.setId(key);
+            return Optional.of(todoDTO);
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Optional<TodoDTO> findById(int id) {
+    public Optional<TodoDTO> findById(Long id) {
         String sql = "SELECT * FROM todo WHERE id = :id";
 
         SqlParameterSource param = new MapSqlParameterSource()
@@ -61,7 +64,8 @@ public class JdbcTodoRepository implements TodoRepository {
 
     @Override
     public List<TodoDTO> findAll() {
-        String sql = "SELECT * FROM todo";
+//        String sql = "SELECT * FROM todo";
+        String sql = "SELECT * FROM todo ORDER BY id DESC;";
 
         return template.query(sql, getTodoDTORowMapper());
     }

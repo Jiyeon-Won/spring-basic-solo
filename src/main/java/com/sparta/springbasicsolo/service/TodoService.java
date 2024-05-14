@@ -16,11 +16,11 @@ public class TodoService {
 
     private final JdbcTodoRepository todoRepository;
 
-    public Long addTodo(TodoDTO todoDTO) {
+    public Optional<TodoDTO> addTodo(TodoDTO todoDTO) {
         return todoRepository.addTodo(todoDTO);
     }
 
-    public Optional<TodoDTO> findById(int id) {
+    public Optional<TodoDTO> findById(Long id) {
         return todoRepository.findById(id);
     }
 

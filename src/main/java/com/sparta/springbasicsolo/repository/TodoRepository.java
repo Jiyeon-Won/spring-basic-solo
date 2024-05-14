@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TodoRepository {
-    Long addTodo(TodoDTO todoDTO);
+    Optional<TodoDTO> addTodo(TodoDTO todoDTO);
 
-    Optional<TodoDTO> findById(int id);
+    Optional<TodoDTO> findById(Long id);
 
     List<TodoDTO> findAll();
 }

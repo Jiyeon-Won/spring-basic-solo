@@ -1,13 +1,10 @@
 package com.sparta.springbasicsolo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Getter
 @Setter
