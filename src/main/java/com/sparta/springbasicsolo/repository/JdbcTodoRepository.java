@@ -13,7 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -42,5 +43,30 @@ public class JdbcTodoRepository implements TodoRepository {
         long key = keyHolder.getKey().longValue();
         todoDTO.setId(key);
         return key;
+    }
+
+    @Override
+    public Optional<TodoDTO> findById(int id) {
+        String sql = "SELECT * FROM todo WHERE id = :id";
+
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", id);
+
+        TodoDTO todoDTO = template.queryForObject(sql, param, getTodoDTORowMapper());
+        if (todoDTO != null) {
+            return Optional.of(todoDTO);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<TodoDTO> findAll() {
+        String sql = "SELECT * FROM todo";
+
+        return template.query(sql, getTodoDTORowMapper());
+    }
+
+    private BeanPropertyRowMapper<TodoDTO> getTodoDTORowMapper() {
+        return new BeanPropertyRowMapper<>(TodoDTO.class);
     }
 }

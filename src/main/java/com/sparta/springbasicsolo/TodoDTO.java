@@ -18,7 +18,6 @@ public class TodoDTO {
     private String content;
     private String person;
     private String password;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdDateTime;
 
     public TodoDTO() {

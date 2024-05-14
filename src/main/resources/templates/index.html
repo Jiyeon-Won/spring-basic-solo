@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>일정관리 앱</title>
@@ -12,52 +12,19 @@
 <body>
 <div class="wrap">
     <div style="display: flex; justify-content: space-between">
-        <h1>일정 관리</h1>
-        <button onclick="location.href='/write'">일정 작성</button>
+        <div class="title">일정 관리</div>
+        <button onclick="location.href='/todo'">일정 작성</button>
     </div>
     <div class="card">
-        <div class="item" onclick="location.href='detail/1'">
-            <input type="hidden" class="item_id" value="1">
-            <div class="item_title">제목</div>
+        <div class="item" th:each="todo : ${items}" th:onclick="'movePage(' + ${todo.getId()} + ')'">
+            <input type="hidden" class="item_id" th:value="${todo.getId()}">
+            <div class="item_title" th:text="${todo.getTitle()}">제목</div>
             <hr>
-            <div class="item_content">내용</div>
-            <hr>
-            <div class="item_bottom">
-                <div>담당자</div>
-                <div>2024-05-13 22:22</div>
-            </div>
-        </div>
-        <div class="item">
-            <input type="hidden" class="item_id" value="">
-            <div class="item_title">제목</div>
-            <hr>
-            <div class="item_content">내용</div>
+            <div class="item_content" th:text="${todo.getContent()}">내용</div>
             <hr>
             <div class="item_bottom">
-                <div>담당자</div>
-                <div>2024-05-13 22:22</div>
-            </div>
-        </div>
-        <div class="item">
-            <input type="hidden" class="item_id" value="">
-            <div class="item_title">제목</div>
-            <hr>
-            <div class="item_content">내용</div>
-            <hr>
-            <div class="item_bottom">
-                <div>담당자</div>
-                <div>2024-05-13 22:22</div>
-            </div>
-        </div>
-        <div class="item">
-            <input type="hidden" class="item_id" value="">
-            <div class="item_title">제목</div>
-            <hr>
-            <div class="item_content">내용</div>
-            <hr>
-            <div class="item_bottom">
-                <div>담당자</div>
-                <div>2024-05-13 22:22</div>
+                <div th:text="${todo.getPerson()}">담당자</div>
+                <div th:text="${#temporals.format(todo.getCreatedDateTime(), 'yyyy-MM-dd HH:mm:ss')}">2024-05-13 22:22</div>
             </div>
         </div>
     </div>
