@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>일정관리 앱</title>
@@ -12,16 +12,17 @@
 <body>
 <div class="wrap">
     <h1>글쓰기</h1>
-    <form action="/todo" class="write_form" method="post">
+    <form action="/todo" class="write_form">
+        <input type="hidden" id="todo_id" th:value="${item != null} ? ${item.getId()} : ''">
         <label for="title">제목</label>
-        <input type="text" name="title" id="title">
+        <input type="text" name="title" id="title" th:value="${item != null} ? ${item.getTitle()} : ''">
         <label for="content">내용</label>
-        <textarea name="content" id="content"></textarea>
+        <textarea name="content" id="content" th:text="${item != null} ? ${item.getContent()} : ''"></textarea>
         <label for="person">담당자</label>
-        <input type="text" name="person" id="person">
+        <input type="text" name="person" id="person" th:value="${item != null} ? ${item.getPerson()} : ''">
         <label for="password">비밀번호</label>
-        <input type="password" id="password">
-        <button type="submit">저장하기</button>
+        <input type="password" name="password" id="password" th:value="${item != null} ? ${item.getPassword()} : ''">
+        <button type="button" th:onclick="'submit()'"></button>
     </form>
 </div>
 </body>

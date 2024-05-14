@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>일정관리 앱</title>
@@ -11,13 +11,21 @@
 </head>
 <body>
 <div class="wrap">
-    <div class="detail_top">제목</div>
+    <div style="display: flex; justify-content: space-between">
+        <div class="title" th:text="${item.getTitle()}">제목</div>
+        <div>
+            <button onclick="location.href='/'">메인화면</button>
+<!--<div class="item" th:each="todo : ${items}" th:onclick="'movePage(/todo/' + ${todo.getId()} + ')'">-->
+            <button onclick="location.href='movePage(/todo/write' + ${item.getId()} + ')'">수정하기</button>
+            <button onclick="location.href='/todo/'">삭제하기</button>
+        </div>
+    </div>
     <hr>
-    <div class="detail_content">내용</div>
+    <div class="detail_content" th:text="${item.getContent()}">내용</div>
     <hr>
     <div class="detail_bottom">
-        <div>담당자</div>
-        <div>2024-05-13 22:22</div>
+        <div th:text="${item.getPerson()}">담당자</div>
+        <div th:text="${#temporals.format(item.getCreatedDateTime(), 'yyyy-MM-dd HH:mm:ss')}">2024-05-13 22:22</div>
     </div>
 </div>
 <script>
