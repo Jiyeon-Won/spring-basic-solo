@@ -56,6 +56,9 @@ public class TodoService {
     public void deleteTodo(Long id, String password) {
         Optional<TodoDTO> findTodo = todoRepository.findById(id);
         if (findTodo.isPresent()) {
+            if (findTodo.get().getIsDeleted()) {
+                throw new DeletedTodoException("이미 삭제된 일정입니다.");
+            }
             if (Objects.equals(findTodo.get().getPassword(), password)) {
                 log.info("비밀번호 일치함. 삭제 진행");
                 todoRepository.deleteTodo(id);
