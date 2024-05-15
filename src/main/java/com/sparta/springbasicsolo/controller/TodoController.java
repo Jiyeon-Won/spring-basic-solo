@@ -67,13 +67,13 @@ public class TodoController {
 
     // 단일 일정 조회
     @GetMapping("/todo/{id}")
-    public TodoDTO detail(@PathVariable Long id) {
+    public ResponseEntity<TodoDTO> detail(@PathVariable Long id) {
         Optional<TodoDTO> todoDTO = todoService.findById(id);
         log.info("단일 조회 todoDTO: {}", todoDTO);
         if (todoDTO.isPresent()) {
-            return todoDTO.get();
+            return ResponseEntity.ok(todoDTO.get());
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     // 전체 일정 조회
