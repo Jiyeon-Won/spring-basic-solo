@@ -15,6 +15,7 @@ public class TodoDTO {
     private String content;
     private String person;
     private String password;
+    private Boolean isDeleted;
     private LocalDateTime createdDateTime;
 
     public TodoDTO() {
@@ -25,5 +26,13 @@ public class TodoDTO {
         this.content = content;
         this.person = person;
         this.password = password;
+    }
+
+    public TodoDTO(String title, String content, String person, String password, boolean isDeleted) {
+        this.title = title;
+        this.content = content;
+        this.person = person;
+        this.password = password;
+        this.isDeleted = isDeleted;
     }
 }

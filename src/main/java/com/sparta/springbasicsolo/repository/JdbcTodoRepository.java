@@ -1,8 +1,10 @@
 package com.sparta.springbasicsolo.repository;
 
 import com.sparta.springbasicsolo.TodoDTO;
+import com.sparta.springbasicsolo.exception.DeletedTodoException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,6 +22,26 @@ import java.util.Optional;
 @Repository
 @RequiredArgsConstructor
 public class JdbcTodoRepository implements TodoRepository {
+
+    @Override
+    public Optional<TodoDTO> findById(Long id) {
+        String sql = "SELECT * FROM todo WHERE id = :id";
+
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("id", id);
+
+        TodoDTO todoDTO;
+        try {
+            todoDTO = template.queryForObject(sql, param, getTodoDTORowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new EmptyResultDataAccessException("등록되지 않은 일정입니다.", 0, e);
+        }
+
+        if (todoDTO != null) {
+            return Optional.of(todoDTO);
+        }
+        return Optional.empty();
+    }
 
     private final NamedParameterJdbcTemplate template;
 
@@ -43,20 +65,6 @@ public class JdbcTodoRepository implements TodoRepository {
         if (update == 1) {
             long key = keyHolder.getKey().longValue();
             todoDTO.setId(key);
-            return Optional.of(todoDTO);
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<TodoDTO> findById(Long id) {
-        String sql = "SELECT * FROM todo WHERE id = :id";
-
-        SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("id", id);
-
-        TodoDTO todoDTO = template.queryForObject(sql, param, getTodoDTORowMapper());
-        if (todoDTO != null) {
             return Optional.of(todoDTO);
         }
         return Optional.empty();
@@ -87,7 +95,8 @@ public class JdbcTodoRepository implements TodoRepository {
 
     @Override
     public void deleteTodo(Long id) {
-        String sql = "DELETE FROM todo WHERE id = :id";
+//        String sql = "DELETE FROM todo WHERE id = :id";
+        String sql = "UPDATE todo SET isDeleted = 1 WHERE id = :id";
 
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", id);

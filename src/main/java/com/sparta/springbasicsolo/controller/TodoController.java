@@ -1,9 +1,13 @@
 package com.sparta.springbasicsolo.controller;
 
 import com.sparta.springbasicsolo.TodoDTO;
+import com.sparta.springbasicsolo.exception.ExceptionDTO;
+import com.sparta.springbasicsolo.exception.PasswordNotMatchedException;
 import com.sparta.springbasicsolo.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,13 +67,13 @@ public class TodoController {
 
     // 단일 일정 조회
     @GetMapping("/todo/{id}")
-    public TodoDTO detail(@PathVariable Long id) {
+    public ResponseEntity<TodoDTO> detail(@PathVariable Long id) {
         Optional<TodoDTO> todoDTO = todoService.findById(id);
         log.info("단일 조회 todoDTO: {}", todoDTO);
         if (todoDTO.isPresent()) {
-            return todoDTO.get();
+            return ResponseEntity.ok(todoDTO.get());
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     // 전체 일정 조회
@@ -87,22 +91,23 @@ public class TodoController {
 
     // 일정 수정
     @PutMapping("/todo/{id}")
-    public TodoDTO updateTodo(@PathVariable Long id, @RequestBody TodoDTO todoDTO) {
+    public ResponseEntity<TodoDTO> updateTodo(@PathVariable Long id, @RequestBody TodoDTO todoDTO) {
         todoDTO.setId(id);
         log.info("입력한 todoDTO: {}", todoDTO);
         Optional<TodoDTO> updateTodo = todoService.updateTodo(todoDTO);
         log.info("수정한 todoDTO: {}", updateTodo);
         if (updateTodo.isPresent()) {
-            return updateTodo.get();
+            return ResponseEntity.ok(updateTodo.get());
         }
-        return null;
+        return ResponseEntity.notFound().build();
     }
 
     // 일정 삭제
     @DeleteMapping("/todo/{id}")
-    public void deleteTodo(@PathVariable Long id, @RequestBody Map<String, String> map) {
+    public ResponseEntity<Void> deleteTodo(@PathVariable Long id, @RequestBody Map<String, String> map) {
         String password = map.get("password");
         log.info("입력한 id:{}, password:{}", id, password);
         todoService.deleteTodo(id, password);
+        return ResponseEntity.ok().build();
     }
 }
