@@ -40,6 +40,9 @@ public class TodoService {
     public Optional<TodoDTO> updateTodo(TodoDTO todoDTO) {
         Optional<TodoDTO> findTodo = todoRepository.findById(todoDTO.getId());
         if (findTodo.isPresent()) {
+            if (findTodo.get().getIsDeleted()) {
+                throw new DeletedTodoException("이미 삭제된 일정입니다.");
+            }
             if (Objects.equals(findTodo.get().getPassword(), todoDTO.getPassword())) {
                 log.info("비밀번호 일치함. 업데이트 진행");
                 int updatedRowCount = todoRepository.updateTodo(todoDTO);

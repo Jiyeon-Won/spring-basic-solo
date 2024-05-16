@@ -1,7 +1,6 @@
 package com.sparta.springbasicsolo.repository;
 
 import com.sparta.springbasicsolo.TodoDTO;
-import com.sparta.springbasicsolo.exception.DeletedTodoException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -103,7 +102,7 @@ public class JdbcTodoRepository implements TodoRepository {
 
         int deletedRowCount = template.update(sql, param);
         if (deletedRowCount == 0) {
-            // 삭제가 안 됐을 때
+            throw new EmptyResultDataAccessException("등록되지 않은 일정입니다.", 0);
         }
     }
 

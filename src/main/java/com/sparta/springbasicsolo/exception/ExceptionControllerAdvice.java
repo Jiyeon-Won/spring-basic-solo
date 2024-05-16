@@ -31,4 +31,11 @@ public class ExceptionControllerAdvice {
         ExceptionDTO exceptionDTO = new ExceptionDTO(HttpStatus.NOT_FOUND, e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDTO);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ExceptionDTO> runtimeException(RuntimeException e) {
+        log.error("서버 내부 오류", e);
+        ExceptionDTO exceptionDTO = new ExceptionDTO(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exceptionDTO);
+    }
 }
