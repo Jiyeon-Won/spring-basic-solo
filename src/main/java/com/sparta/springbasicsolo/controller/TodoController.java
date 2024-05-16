@@ -1,6 +1,7 @@
 package com.sparta.springbasicsolo.controller;
 
 import com.sparta.springbasicsolo.TodoDTO;
+import com.sparta.springbasicsolo.TodoForm;
 import com.sparta.springbasicsolo.exception.ExceptionDTO;
 import com.sparta.springbasicsolo.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,8 +70,14 @@ public class TodoController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
     })
-    public ResponseEntity<TodoDTO> addTodo(@Valid @RequestBody TodoDTO todoDTO) {
-        log.info("입력한 todoDTO: {}", todoDTO);
+    public ResponseEntity<TodoDTO> addTodo(@Valid @RequestBody TodoForm todoForm) {
+        log.info("입력한 todoForm: {}", todoForm);
+        TodoDTO todoDTO = TodoDTO.builder()
+                .title(todoForm.getTitle())
+                .content(todoForm.getContent())
+                .person(todoForm.getPerson())
+                .password(todoForm.getPassword())
+                .build();
         Optional<TodoDTO> savedTodo = todoService.addTodo(todoDTO);
         log.info("저장된 todoDTO: {}", todoDTO);
 
@@ -131,9 +138,15 @@ public class TodoController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
     })
-    public ResponseEntity<TodoDTO> updateTodo(@PathVariable Long id, @Valid @RequestBody TodoDTO todoDTO) {
-        todoDTO.setId(id);
-        log.info("입력한 todoDTO: {}", todoDTO);
+    public ResponseEntity<TodoDTO> updateTodo(@PathVariable Long id, @Valid @RequestBody TodoForm todoForm) {
+        log.info("입력한 todoDTO: {}", todoForm);
+        TodoDTO todoDTO = TodoDTO.builder()
+                .id(id)
+                .title(todoForm.getTitle())
+                .content(todoForm.getContent())
+                .person(todoForm.getPerson())
+                .password(todoForm.getPassword())
+                .build();
         Optional<TodoDTO> updateTodo = todoService.updateTodo(todoDTO);
         log.info("수정한 todoDTO: {}", updateTodo);
         if (updateTodo.isPresent()) {
