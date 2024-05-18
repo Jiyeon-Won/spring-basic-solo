@@ -1,8 +1,10 @@
 package com.sparta.springbasicsolo.controller;
 
-import com.sparta.springbasicsolo.TodoDTO;
-import com.sparta.springbasicsolo.TodoForm;
+import com.sparta.springbasicsolo.controller.dto.CommonResponseDTO;
+import com.sparta.springbasicsolo.controller.dto.TodoRequestDTO;
+import com.sparta.springbasicsolo.controller.dto.TodoResponseDTO;
 import com.sparta.springbasicsolo.exception.ExceptionDTO;
+import com.sparta.springbasicsolo.repository.entity.Todo;
 import com.sparta.springbasicsolo.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -31,36 +33,6 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    // 메인 화면
-//    @GetMapping("/todo")
-//    public String findAll(Model model) {
-//        List<TodoDTO> todoList = todoService.findAll();
-//        model.addAttribute("items", todoList);
-//        return "index";
-//    }
-
-    // 일정 상세 페이지
-//    @GetMapping("/todo/{id}")
-//    public String detail(@PathVariable Long id, Model model) {
-//        Optional<TodoDTO> todoDTO = todoService.findById(id);
-//        todoDTO.ifPresent(dto -> model.addAttribute("item", dto));
-//        return "detail";
-//    }
-
-    // 일정 작성 페이지
-//    @GetMapping("/todo/write")
-//    public String write() {
-//        return "write";
-//    }
-
-    // 일정 수정 페이지
-//    @GetMapping("/todo/write/{id}")
-//    public String write(@PathVariable Long id, Model model) {
-//        Optional<TodoDTO> todoDTO = todoService.findById(id);
-//        todoDTO.ifPresent(dto -> model.addAttribute("item", dto));
-//        return "write";
-//    }
-
     // 일정 저장
     @PostMapping("/todo")
     @Operation(summary = "todo 저장", description = "todo 저장")
@@ -70,19 +42,17 @@ public class TodoController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
     })
-    public ResponseEntity<TodoDTO> addTodo(@Valid @RequestBody TodoForm todoForm) {
-        log.info("입력한 todoForm: {}", todoForm);
-        TodoDTO todoDTO = TodoDTO.builder()
-                .title(todoForm.getTitle())
-                .content(todoForm.getContent())
-                .person(todoForm.getPerson())
-                .password(todoForm.getPassword())
-                .build();
-        Optional<TodoDTO> savedTodo = todoService.addTodo(todoDTO);
-        log.info("저장된 todoDTO: {}", todoDTO);
-
+    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> addTodo(@Valid @RequestBody TodoRequestDTO dto) {
+        log.info("입력한 todoRequestDTO: {}", dto);
+        Optional<Todo> savedTodo = todoService.addTodo(dto);
+        log.info("저장된 todoDTO: {}", savedTodo);
         if (savedTodo.isPresent()) {
-            return ResponseEntity.ok(savedTodo.get());
+            TodoResponseDTO responseDTO = new TodoResponseDTO(savedTodo.get());
+            return ResponseEntity.ok()
+                    .body(CommonResponseDTO.<TodoResponseDTO>builder()
+                            .statusCode(HttpStatus.OK.value())
+                            .data(responseDTO)
+                            .build());
         }
         throw new RuntimeException("서버 내부 오류");
     }
@@ -92,17 +62,22 @@ public class TodoController {
     @Operation(summary = "todo 단일 조회", description = "id값을 받아 1개의 todo만 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "일정 조회 성공"
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoDTO.class))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "이미 삭제된 일정입니다."
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
     })
-    public ResponseEntity<TodoDTO> detail(@PathVariable Long id) {
-        Optional<TodoDTO> todoDTO = todoService.findById(id);
-        log.info("단일 조회 todoDTO: {}", todoDTO);
-        if (todoDTO.isPresent()) {
-            return ResponseEntity.ok(todoDTO.get());
+    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> detail(@PathVariable Long id) {
+        Optional<Todo> findTodo = todoService.findById(id);
+        log.info("단일 조회 todoDTO: {}", findTodo);
+        if (findTodo.isPresent()) {
+            TodoResponseDTO responseDTO = new TodoResponseDTO(findTodo.get());
+            return ResponseEntity.ok()
+                    .body(CommonResponseDTO.<TodoResponseDTO>builder()
+                            .statusCode(HttpStatus.OK.value())
+                            .data(responseDTO)
+                            .build());
         }
         throw new RuntimeException("서버 내부 오류");
     }
@@ -112,15 +87,20 @@ public class TodoController {
     @Operation(summary = "todo 전체 조회", description = "전체 todo 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "일정 조회 성공"
-                    , content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TodoDTO.class), minItems = 2)))
+                    , content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TodoResponseDTO.class), minItems = 2)))
     })
-    public ResponseEntity<List<TodoDTO>> findAll() {
-        List<TodoDTO> todoList = todoService.findAll();
-        log.info("전체 조회 todoList: {}", todoList.stream().map(TodoDTO::toString)
+    public ResponseEntity<CommonResponseDTO<List<TodoResponseDTO>>> findAll() {
+        List<Todo> todoList = todoService.findAll();
+        log.info("전체 조회 todoList: {}", todoList.stream().map(Todo::toString)
                 .collect(Collectors.joining(", ", "[", "]")));
 
         if (!todoList.isEmpty()) {
-            return ResponseEntity.ok(todoList);
+            List<TodoResponseDTO> responseList = todoList.stream().map(TodoResponseDTO::new).toList();
+            return ResponseEntity.ok()
+                    .body(CommonResponseDTO.<List<TodoResponseDTO>>builder()
+                            .statusCode(HttpStatus.OK.value())
+                            .data(responseList)
+                            .build());
         }
         throw new RuntimeException("서버 내부 오류");
     }
@@ -130,7 +110,7 @@ public class TodoController {
     @Operation(summary = "todo 수정", description = "id값을 받아 1개의 todo 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "일정 수정 성공"
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoDTO.class))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoResponseDTO.class))),
             @ApiResponse(responseCode = "401", description = "비밀 번호가 일치하지 않습니다."
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))),
             @ApiResponse(responseCode = "404", description = "이미 삭제된 일정입니다."
@@ -138,19 +118,17 @@ public class TodoController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
     })
-    public ResponseEntity<TodoDTO> updateTodo(@PathVariable Long id, @Valid @RequestBody TodoForm todoForm) {
-        log.info("입력한 todoDTO: {}", todoForm);
-        TodoDTO todoDTO = TodoDTO.builder()
-                .id(id)
-                .title(todoForm.getTitle())
-                .content(todoForm.getContent())
-                .person(todoForm.getPerson())
-                .password(todoForm.getPassword())
-                .build();
-        Optional<TodoDTO> updateTodo = todoService.updateTodo(todoDTO);
+    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> updateTodo(@PathVariable Long id, @Valid @RequestBody TodoRequestDTO dto) {
+        log.info("입력한 todoDTO: {}", dto);
+        Optional<Todo> updateTodo = todoService.updateTodo(id, dto);
         log.info("수정한 todoDTO: {}", updateTodo);
         if (updateTodo.isPresent()) {
-            return ResponseEntity.ok(updateTodo.get());
+            TodoResponseDTO responseDTO = new TodoResponseDTO(updateTodo.get());
+            return ResponseEntity.ok()
+                    .body(CommonResponseDTO.<TodoResponseDTO>builder()
+                            .statusCode(HttpStatus.OK.value())
+                            .data(responseDTO)
+                            .build());
         }
         throw new RuntimeException("서버 내부 오류");
     }
@@ -166,10 +144,13 @@ public class TodoController {
             @ApiResponse(responseCode = "404", description = "이미 삭제된 일정입니다."
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
     })
-    public String deleteTodo(@PathVariable Long id, @RequestBody Map<String, String> map) {
+    public ResponseEntity<CommonResponseDTO<Void>> deleteTodo(@PathVariable Long id, @RequestBody Map<String, String> map) {
         String password = map.get("password");
         log.info("입력한 id:{}, password:{}", id, password);
         todoService.deleteTodo(id, password);
-        return HttpStatus.OK.toString();
+        return ResponseEntity.ok()
+                .body(CommonResponseDTO.<Void>builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .build());
     }
 }
