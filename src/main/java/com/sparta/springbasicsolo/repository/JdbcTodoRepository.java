@@ -22,6 +22,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JdbcTodoRepository implements TodoRepository {
 
+    private final NamedParameterJdbcTemplate template;
+
     @Override
     public Optional<TodoDTO> findById(Long id) {
         String sql = "SELECT * FROM todo WHERE id = :id";
@@ -41,8 +43,6 @@ public class JdbcTodoRepository implements TodoRepository {
         }
         return Optional.empty();
     }
-
-    private final NamedParameterJdbcTemplate template;
 
     @Override
     public Optional<TodoDTO> addTodo(TodoDTO todoDTO) {
