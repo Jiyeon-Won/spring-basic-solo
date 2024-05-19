@@ -1,15 +1,18 @@
 package com.sparta.springbasicsolo.controller.filedto;
 
-import com.sparta.springbasicsolo.repository.entity.Image;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.core.io.Resource;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class FileResponseDTO {
     private String fileName;
+    private Resource resource;
 
-    public FileResponseDTO(Image image) {
-        this.fileName = image.getName();
+    public FileResponseDTO(String fileName) {
+        this.fileName = fileName;
     }
 }

@@ -1,12 +1,14 @@
 package com.sparta.springbasicsolo.service;
 
 import com.sparta.springbasicsolo.controller.filedto.FileRequestDTO;
+import com.sparta.springbasicsolo.controller.filedto.FileResponseDTO;
 import com.sparta.springbasicsolo.exception.FileException;
 import com.sparta.springbasicsolo.repository.JpaFileRepository;
 import com.sparta.springbasicsolo.repository.entity.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.PathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,5 +48,16 @@ public class FileService {
         int point = originalFileName.lastIndexOf(".");
         String extension = originalFileName.substring(point + 1);
         return UUID.randomUUID() + "." + extension;
+    }
+
+    public FileResponseDTO downloadImage(Long id) {
+        Optional<Image> byId = fileRepository.findById(id);
+        String url = byId.get().getPath() + byId.get().getName();
+
+        FileResponseDTO fileResponseDTO = new FileResponseDTO(byId.get().getName(), new PathResource(url));
+        if (byId.isPresent()) {
+            return fileResponseDTO;
+        }
+        return null;
     }
 }
