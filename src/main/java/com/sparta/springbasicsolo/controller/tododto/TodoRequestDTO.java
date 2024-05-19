@@ -1,4 +1,4 @@
-package com.sparta.springbasicsolo.controller.dto;
+package com.sparta.springbasicsolo.controller.tododto;
 
 import com.sparta.springbasicsolo.repository.entity.Todo;
 import io.swagger.v3.oas.annotations.media.Schema;
