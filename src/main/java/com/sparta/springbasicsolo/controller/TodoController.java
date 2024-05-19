@@ -1,9 +1,7 @@
 package com.sparta.springbasicsolo.controller;
 
-import com.sparta.springbasicsolo.controller.dto.CommonResponseDTO;
-import com.sparta.springbasicsolo.controller.dto.TodoRequestDTO;
-import com.sparta.springbasicsolo.controller.dto.TodoResponseDTO;
-import com.sparta.springbasicsolo.exception.ExceptionDTO;
+import com.sparta.springbasicsolo.controller.tododto.TodoRequestDTO;
+import com.sparta.springbasicsolo.controller.tododto.TodoResponseDTO;
 import com.sparta.springbasicsolo.repository.entity.Todo;
 import com.sparta.springbasicsolo.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,9 +36,9 @@ public class TodoController {
     @Operation(summary = "todo 저장", description = "todo 저장")
     @ApiResponses({
             @ApiResponse(responseCode = "404", description = "이미 삭제된 일정입니다."
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class)))
     })
     public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> addTodo(@Valid @RequestBody TodoRequestDTO dto) {
         log.info("입력한 todoRequestDTO: {}", dto);
@@ -64,9 +62,9 @@ public class TodoController {
             @ApiResponse(responseCode = "200", description = "일정 조회 성공"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "이미 삭제된 일정입니다."
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class)))
     })
     public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> detail(@PathVariable Long id) {
         Optional<Todo> findTodo = todoService.findById(id);
@@ -112,11 +110,11 @@ public class TodoController {
             @ApiResponse(responseCode = "200", description = "일정 수정 성공"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoResponseDTO.class))),
             @ApiResponse(responseCode = "401", description = "비밀 번호가 일치하지 않습니다."
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "이미 삭제된 일정입니다."
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class))),
             @ApiResponse(responseCode = "500", description = "서버 내부 오류"
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class)))
     })
     public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> updateTodo(@PathVariable Long id, @Valid @RequestBody TodoRequestDTO dto) {
         log.info("입력한 todoDTO: {}", dto);
@@ -138,11 +136,11 @@ public class TodoController {
     @Operation(summary = "todo 삭제", description = "id값을 받아 1개의 todo 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "일정 삭제 성공"
-                    , content = @Content(mediaType = "text/plain", schema = @Schema(type = "string", example = "\"200 OK\""))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoResponseDTO.class))),
             @ApiResponse(responseCode = "401", description = "비밀 번호가 일치하지 않습니다."
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class))),
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class))),
             @ApiResponse(responseCode = "404", description = "이미 삭제된 일정입니다."
-                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionDTO.class)))
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class)))
     })
     public ResponseEntity<CommonResponseDTO<Void>> deleteTodo(@PathVariable Long id, @RequestBody Map<String, String> map) {
         String password = map.get("password");
