@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,44 +22,46 @@ public class TodoService {
 
     private final JpaTodoRepository todoRepository;
 
-    public Optional<Todo> addTodo(TodoRequestDTO dto) {
+    public Todo addTodo(TodoRequestDTO dto) {
         Todo todo = dto.toEntity();
-        return Optional.of(todoRepository.save(todo));
+        return todoRepository.save(todo);
     }
 
-    public Optional<Todo> findById(Long id) {
-        Optional<Todo> findTodo = todoRepository.findById(id);
-        findTodo.ifPresent(todo -> ifDeletedThrow(todo.getIsDeleted()));
+    public Todo findById(Long id) {
+        Todo findTodo = todoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+        ifDeletedThrow(findTodo.getIsDeleted());
         return findTodo;
     }
 
     public List<Todo> findAll() {
-        return todoRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        List<Todo> todos = todoRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        if (todos.isEmpty()) {
+            throw new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다.");
+        }
+        return todos;
     }
 
-    public Optional<Todo> updateTodo(Long id, TodoRequestDTO dto) {
-        Optional<Todo> findTodo = todoRepository.findById(id);
-        if (findTodo.isPresent()) {
-            ifDeletedThrow(findTodo.get().getIsDeleted());
-            ifPasswordNotMatchedThrow(Objects.equals(findTodo.get().getPassword(), dto.getPassword()));
-            Todo updateTodo = findTodo.get();
-            updateTodo.setTitle(dto.getTitle());
-            updateTodo.setContent(dto.getContent());
-            updateTodo.setPerson(dto.getPerson());
-            return Optional.of(todoRepository.save(updateTodo));
-        }
-        return Optional.empty();
+    public Todo updateTodo(Long id, TodoRequestDTO dto) {
+        Todo findTodo = todoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+        ifDeletedThrow(findTodo.getIsDeleted());
+        ifPasswordNotMatchedThrow(Objects.equals(findTodo.getPassword(), dto.getPassword()));
+
+        findTodo.setTitle(dto.getTitle());
+        findTodo.setContent(dto.getContent());
+        findTodo.setPerson(dto.getPerson());
+        return todoRepository.save(findTodo);
     }
 
     public void deleteTodo(Long id, String password) {
-        Optional<Todo> findTodo = todoRepository.findById(id);
-        if (findTodo.isPresent()) {
-            ifDeletedThrow(findTodo.get().getIsDeleted());
-            ifPasswordNotMatchedThrow(Objects.equals(findTodo.get().getPassword(), password));
-            Todo updateTodo = findTodo.get();
-            updateTodo.setIsDeleted(true);
-            todoRepository.save(updateTodo);
-        }
+        Todo findTodo = todoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+        ifDeletedThrow(findTodo.getIsDeleted());
+        ifPasswordNotMatchedThrow(Objects.equals(findTodo.getPassword(), password));
+
+        findTodo.setIsDeleted(true);
+        todoRepository.save(findTodo);
     }
 
     private void ifPasswordNotMatchedThrow(boolean isPasswordNotMatched) {

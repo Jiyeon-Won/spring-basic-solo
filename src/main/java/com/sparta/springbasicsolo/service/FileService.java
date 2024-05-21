@@ -1,6 +1,5 @@
 package com.sparta.springbasicsolo.service;
 
-import com.sparta.springbasicsolo.controller.filedto.FileRequestDTO;
 import com.sparta.springbasicsolo.controller.filedto.FileResponseDTO;
 import com.sparta.springbasicsolo.exception.FileException;
 import com.sparta.springbasicsolo.repository.JpaFileRepository;
@@ -14,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,7 +27,7 @@ public class FileService {
     @Value("${file.dir}")
     private String fileDir;
 
-    public Optional<Image> saveImage(MultipartFile file) {
+    public Image saveImage(MultipartFile file) {
         String createdFileName = createFileName(file.getOriginalFilename());
 
         try {
@@ -40,8 +40,7 @@ public class FileService {
         Image image = new Image();
         image.setName(createdFileName);
         image.setPath(fileDir);
-        Image savedImage = fileRepository.save(image);
-        return Optional.of(savedImage);
+        return fileRepository.save(image);
     }
 
     private String createFileName(String originalFileName) {
@@ -51,13 +50,9 @@ public class FileService {
     }
 
     public FileResponseDTO downloadImage(Long id) {
-        Optional<Image> byId = fileRepository.findById(id);
-        String url = byId.get().getPath() + byId.get().getName();
+        Image byId = fileRepository.findById(id).orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+        String url = byId.getPath() + byId.getName();
 
-        FileResponseDTO fileResponseDTO = new FileResponseDTO(byId.get().getName(), new PathResource(url));
-        if (byId.isPresent()) {
-            return fileResponseDTO;
-        }
-        return null;
+        return new FileResponseDTO(byId.getName(), new PathResource(url));
     }
 }

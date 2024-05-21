@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -44,19 +45,19 @@ public class ExceptionControllerAdvice {
                         .build());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> runtimeException(RuntimeException e) {
-        log.error("서버 내부 오류", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(CommonResponseDTO.<TodoResponseDTO>builder()
-                        .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+    @ExceptionHandler(FileException.class)
+    public ResponseEntity<CommonResponseDTO<FileResponseDTO>> fileException(FileException e) {
+        log.error("파일 저장 실패", e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(CommonResponseDTO.<FileResponseDTO>builder()
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
                         .message(e.getMessage())
                         .build());
     }
 
-    @ExceptionHandler(FileException.class)
-    public ResponseEntity<CommonResponseDTO<FileResponseDTO>> fileException(FileException e) {
-        log.error("파일 저장 실패", e);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CommonResponseDTO<FileResponseDTO>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error("요청 변수가 없거나 요청 변수 이름이 잘못됐음", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponseDTO.<FileResponseDTO>builder()
                         .statusCode(HttpStatus.BAD_REQUEST.value())
