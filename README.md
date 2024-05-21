@@ -1,10 +1,14 @@
 ## Use Case Diagrm
-![spring_basic_solo](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/bca7b23c-caff-4e03-a534-c48193f1785a)
+![todo](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/9b506837-1736-410f-94cb-dbf93661bac0)
+
 
 
 ## API 명세서
-![image](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/0e37a64a-ecd4-43e0-ba38-28573f1d55c5)
+![Todo API 명세서](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/b979775e-a3b1-44d9-9796-6efc6d604e39)
+![Image API 명세서](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/04cd3d9a-5685-43b0-9928-3f9635ad0629)
+![공통 오류 코드](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/0877c7f6-e284-4ae1-abfc-41cd54dad4cc)
+
 
 
 ## ERD
-![spring_basic_solo drawio](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/bf7f1756-d145-498f-bbd1-44d2c9dad957)
+![erd](https://github.com/Jiyeon-Won/spring-basic-solo/assets/83663292/421ada44-74eb-403c-b8ab-b4cb7683a9db)
