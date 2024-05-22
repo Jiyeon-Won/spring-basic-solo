@@ -1,6 +1,6 @@
-package com.sparta.springbasicsolo.controller.tododto;
+package com.sparta.springbasicsolo.domain.todo.tododto;
 
-import com.sparta.springbasicsolo.repository.entity.Todo;
+import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

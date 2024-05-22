@@ -1,8 +1,8 @@
 package com.sparta.springbasicsolo.exception;
 
-import com.sparta.springbasicsolo.controller.CommonResponseDTO;
-import com.sparta.springbasicsolo.controller.filedto.FileResponseDTO;
-import com.sparta.springbasicsolo.controller.tododto.TodoResponseDTO;
+import com.sparta.springbasicsolo.domain.CommonResponseDTO;
+import com.sparta.springbasicsolo.domain.file.filedto.FileResponseDTO;
+import com.sparta.springbasicsolo.domain.todo.tododto.TodoResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
-package com.sparta.springbasicsolo.controller.tododto;
+package com.sparta.springbasicsolo.domain.todo.tododto;
 
-import com.sparta.springbasicsolo.repository.entity.Todo;
+import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

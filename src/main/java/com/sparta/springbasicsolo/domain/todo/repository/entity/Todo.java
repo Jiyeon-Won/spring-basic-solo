@@ -1,4 +1,4 @@
-package com.sparta.springbasicsolo.repository.entity;
+package com.sparta.springbasicsolo.domain.todo.repository.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.sparta.springbasicsolo.controller.filedto;
+package com.sparta.springbasicsolo.domain.file.filedto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

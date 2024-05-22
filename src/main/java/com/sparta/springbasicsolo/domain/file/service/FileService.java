@@ -1,9 +1,9 @@
-package com.sparta.springbasicsolo.service;
+package com.sparta.springbasicsolo.domain.file.service;
 
-import com.sparta.springbasicsolo.controller.filedto.FileResponseDTO;
+import com.sparta.springbasicsolo.domain.file.filedto.FileResponseDTO;
 import com.sparta.springbasicsolo.exception.FileException;
-import com.sparta.springbasicsolo.repository.JpaFileRepository;
-import com.sparta.springbasicsolo.repository.entity.Image;
+import com.sparta.springbasicsolo.domain.file.repository.JpaFileRepository;
+import com.sparta.springbasicsolo.domain.file.repository.entity.Image;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.PathResource;

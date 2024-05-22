@@ -1,14 +1,15 @@
-package com.sparta.springbasicsolo.service;
+package com.sparta.springbasicsolo.domain.todo.service;
 
-import com.sparta.springbasicsolo.controller.tododto.TodoRequestDTO;
+import com.sparta.springbasicsolo.domain.todo.tododto.TodoRequestDTO;
 import com.sparta.springbasicsolo.exception.DeletedTodoException;
 import com.sparta.springbasicsolo.exception.PasswordNotMatchedException;
-import com.sparta.springbasicsolo.repository.JpaTodoRepository;
-import com.sparta.springbasicsolo.repository.entity.Todo;
+import com.sparta.springbasicsolo.domain.todo.repository.JpaTodoRepository;
+import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,11 +22,13 @@ public class TodoService {
 
     private final JpaTodoRepository todoRepository;
 
+    @Transactional
     public Todo addTodo(TodoRequestDTO dto) {
         Todo todo = dto.toEntity();
         return todoRepository.save(todo);
     }
 
+    @Transactional(readOnly = true)
     public Todo findById(Long id) {
         Todo findTodo = todoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
@@ -33,6 +36,7 @@ public class TodoService {
         return findTodo;
     }
 
+    @Transactional(readOnly = true)
     public List<Todo> findAll() {
         List<Todo> todos = todoRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         if (todos.isEmpty()) {
@@ -41,6 +45,7 @@ public class TodoService {
         return todos;
     }
 
+    @Transactional
     public Todo updateTodo(Long id, TodoRequestDTO dto) {
         Todo findTodo = todoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
@@ -53,6 +58,7 @@ public class TodoService {
         return todoRepository.save(findTodo);
     }
 
+    @Transactional
     public void deleteTodo(Long id, String password) {
         Todo findTodo = todoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));

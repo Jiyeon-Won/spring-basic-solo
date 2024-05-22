@@ -1,9 +1,10 @@
-package com.sparta.springbasicsolo.controller;
+package com.sparta.springbasicsolo.domain.file.controller;
 
-import com.sparta.springbasicsolo.controller.filedto.FileRequestDTO;
-import com.sparta.springbasicsolo.controller.filedto.FileResponseDTO;
-import com.sparta.springbasicsolo.repository.entity.Image;
-import com.sparta.springbasicsolo.service.FileService;
+import com.sparta.springbasicsolo.domain.CommonResponseDTO;
+import com.sparta.springbasicsolo.domain.file.filedto.FileRequestDTO;
+import com.sparta.springbasicsolo.domain.file.filedto.FileResponseDTO;
+import com.sparta.springbasicsolo.domain.file.repository.entity.Image;
+import com.sparta.springbasicsolo.domain.file.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

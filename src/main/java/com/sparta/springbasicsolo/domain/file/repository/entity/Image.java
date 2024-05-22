@@ -1,4 +1,4 @@
-package com.sparta.springbasicsolo.repository.entity;
+package com.sparta.springbasicsolo.domain.file.repository.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

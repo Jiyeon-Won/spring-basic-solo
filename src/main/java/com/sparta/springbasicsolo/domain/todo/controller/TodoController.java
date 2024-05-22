@@ -1,9 +1,10 @@
-package com.sparta.springbasicsolo.controller;
+package com.sparta.springbasicsolo.domain.todo.controller;
 
-import com.sparta.springbasicsolo.controller.tododto.TodoRequestDTO;
-import com.sparta.springbasicsolo.controller.tododto.TodoResponseDTO;
-import com.sparta.springbasicsolo.repository.entity.Todo;
-import com.sparta.springbasicsolo.service.TodoService;
+import com.sparta.springbasicsolo.domain.CommonResponseDTO;
+import com.sparta.springbasicsolo.domain.todo.tododto.TodoRequestDTO;
+import com.sparta.springbasicsolo.domain.todo.tododto.TodoResponseDTO;
+import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
+import com.sparta.springbasicsolo.domain.todo.service.TodoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;

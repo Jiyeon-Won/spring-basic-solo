@@ -1,4 +1,4 @@
-package com.sparta.springbasicsolo.controller;
+package com.sparta.springbasicsolo.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
