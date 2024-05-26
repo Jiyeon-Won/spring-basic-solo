@@ -38,6 +38,16 @@ public class ExceptionControllerAdvice {
                         .build());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> illegalArgumentException(IllegalArgumentException e) {
+        log.error("findById 실패", e);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(CommonResponseDTO.<TodoResponseDTO>builder()
+                        .statusCode(HttpStatus.NOT_FOUND.value())
+                        .message(e.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> emptyResultDataAccessException(EmptyResultDataAccessException e) {
         log.error("DB 조회가 안됨", e);
@@ -60,7 +70,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponseDTO<FileResponseDTO>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error("요청 변수가 없거나 요청 변수 이름이 잘못됐음", e);
+        log.error("요청 변수가 없거나 요청 변수 이름이 잘못됐음 (Validation 실패)", e);
 
         String errorMessages = e.getBindingResult().getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)

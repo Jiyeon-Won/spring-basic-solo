@@ -31,7 +31,7 @@ public class TodoService {
     @Transactional(readOnly = true)
     public Todo findById(Long id) {
         Todo findTodo = todoRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 Todo ID입니다."));
         ifDeletedThrow(findTodo.getIsDeleted());
         return findTodo;
     }
@@ -40,7 +40,7 @@ public class TodoService {
     public List<Todo> findAll() {
         List<Todo> todos = todoRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
         if (todos.isEmpty()) {
-            throw new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다.");
+            throw new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다.");
         }
         return todos;
     }
@@ -48,7 +48,7 @@ public class TodoService {
     @Transactional
     public Todo updateTodo(Long id, TodoRequestDTO dto) {
         Todo findTodo = todoRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다."));
         ifDeletedThrow(findTodo.getIsDeleted());
         ifPasswordNotMatchedThrow(Objects.equals(findTodo.getPassword(), dto.getPassword()));
 
@@ -61,7 +61,7 @@ public class TodoService {
     @Transactional
     public void deleteTodo(Long id, String password) {
         Todo findTodo = todoRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다."));
         ifDeletedThrow(findTodo.getIsDeleted());
         ifPasswordNotMatchedThrow(Objects.equals(findTodo.getPassword(), password));
 

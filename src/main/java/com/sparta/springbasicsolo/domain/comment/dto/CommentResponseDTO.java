@@ -1,6 +1,7 @@
 package com.sparta.springbasicsolo.domain.comment.dto;
 
 import com.sparta.springbasicsolo.domain.comment.repository.entity.Comment;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,11 +15,19 @@ public class CommentResponseDTO {
 
     private String content;
     private Long userId;
+    private Long commentId;
     private LocalDateTime createdDateTime;
 
-    public CommentResponseDTO(Comment comment) {
-        this.content = comment.getContent();
-        this.userId = comment.getUserId();
-        this.createdDateTime = comment.getCreatedDateTime();
+    public CommentResponseDTO(String content, Long userId, Long commentId, LocalDateTime createdDateTime) {
+        this.content = content;
+        this.userId = userId;
+        this.commentId = commentId;
+        this.createdDateTime = createdDateTime;
+    }
+
+    public CommentResponseDTO(String content, Long commentId, LocalDateTime createdDateTime) {
+        this.content = content;
+        this.commentId = commentId;
+        this.createdDateTime = createdDateTime;
     }
 }

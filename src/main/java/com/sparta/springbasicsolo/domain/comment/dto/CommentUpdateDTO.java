@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CommentRequestDTO {
+public class CommentUpdateDTO {
 
     @NotBlank(message = "댓글 내용을 입력해주세요.")
     private String content;
@@ -19,4 +19,7 @@ public class CommentRequestDTO {
 
     @NotNull(message = "유저 ID를 입력해주세요.")
     private Long userId;
+
+    @NotNull(message = "댓글 ID를 입력해주세요.")
+    private Long commentId;
 }
