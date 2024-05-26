@@ -1,6 +1,6 @@
 package com.sparta.springbasicsolo.domain.todo.service;
 
-import com.sparta.springbasicsolo.domain.todo.tododto.TodoRequestDTO;
+import com.sparta.springbasicsolo.domain.todo.dto.TodoRequestDTO;
 import com.sparta.springbasicsolo.exception.DeletedTodoException;
 import com.sparta.springbasicsolo.exception.PasswordNotMatchedException;
 import com.sparta.springbasicsolo.domain.todo.repository.JpaTodoRepository;
