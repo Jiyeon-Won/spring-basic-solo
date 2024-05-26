@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CommentUpdateDTO {
+public class CommentActionDTO {
 
     @NotBlank(message = "댓글 내용을 입력해주세요.")
     private String content;

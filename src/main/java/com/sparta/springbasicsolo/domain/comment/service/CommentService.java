@@ -2,7 +2,7 @@ package com.sparta.springbasicsolo.domain.comment.service;
 
 import com.sparta.springbasicsolo.domain.comment.dto.CommentRequestDTO;
 import com.sparta.springbasicsolo.domain.comment.dto.CommentResponseDTO;
-import com.sparta.springbasicsolo.domain.comment.dto.CommentUpdateDTO;
+import com.sparta.springbasicsolo.domain.comment.dto.CommentActionDTO;
 import com.sparta.springbasicsolo.domain.comment.repository.CommentRepository;
 import com.sparta.springbasicsolo.domain.comment.repository.entity.Comment;
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
@@ -42,7 +42,8 @@ public class CommentService {
         );
     }
 
-    public CommentResponseDTO updateComment(CommentUpdateDTO dto) {
+    @Transactional
+    public CommentResponseDTO updateComment(CommentActionDTO dto) {
         Todo findTodo = todoService.findById(dto.getTodoId());
         Comment findComment = commentRepository.findById(dto.getCommentId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 댓글 번호입니다."));
@@ -60,5 +61,18 @@ public class CommentService {
                 updatedComment.getId(),
                 updatedComment.getCreatedDateTime()
         );
+    }
+
+    @Transactional
+    public void deleteComment(CommentActionDTO dto) {
+        Todo findTodo = todoService.findById(dto.getTodoId());
+        Comment findComment = commentRepository.findById(dto.getCommentId())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 댓글 번호입니다."));
+
+        if (!Objects.equals(findComment.getUserId(), dto.getUserId())) {
+            throw new IllegalArgumentException("선택한 댓글의 사용자가 현재 사용자와 일치하지 않습니다.");
+        }
+
+        commentRepository.delete(findComment);
     }
 }
