@@ -1,4 +1,4 @@
-package com.sparta.springbasicsolo.domain.todo.tododto;
+package com.sparta.springbasicsolo.domain.todo.dto;
 
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import lombok.Getter;

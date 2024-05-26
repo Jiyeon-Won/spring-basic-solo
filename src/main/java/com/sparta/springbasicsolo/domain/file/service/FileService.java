@@ -1,6 +1,6 @@
 package com.sparta.springbasicsolo.domain.file.service;
 
-import com.sparta.springbasicsolo.domain.file.filedto.FileResponseDTO;
+import com.sparta.springbasicsolo.domain.file.dto.FileResponseDTO;
 import com.sparta.springbasicsolo.exception.FileException;
 import com.sparta.springbasicsolo.domain.file.repository.JpaFileRepository;
 import com.sparta.springbasicsolo.domain.file.repository.entity.Image;
@@ -68,7 +68,7 @@ public class FileService {
 
     public FileResponseDTO downloadImage(Long id) {
         Image byId = fileRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("요청하신 리소스를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다."));
         String url = byId.getPath() + byId.getName();
 
         return new FileResponseDTO(byId.getName(), new PathResource(url));
