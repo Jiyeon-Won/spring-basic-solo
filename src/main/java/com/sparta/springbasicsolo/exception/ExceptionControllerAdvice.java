@@ -4,12 +4,15 @@ import com.sparta.springbasicsolo.domain.CommonResponseDTO;
 import com.sparta.springbasicsolo.domain.file.dto.FileResponseDTO;
 import com.sparta.springbasicsolo.domain.todo.dto.TodoResponseDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -58,10 +61,15 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponseDTO<FileResponseDTO>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("요청 변수가 없거나 요청 변수 이름이 잘못됐음", e);
+
+        String errorMessages = e.getBindingResult().getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponseDTO.<FileResponseDTO>builder()
                         .statusCode(HttpStatus.BAD_REQUEST.value())
-                        .message(e.getMessage())
+                        .message(errorMessages)
                         .build());
     }
 }

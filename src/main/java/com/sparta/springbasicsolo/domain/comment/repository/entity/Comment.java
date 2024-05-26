@@ -3,6 +3,7 @@ package com.sparta.springbasicsolo.domain.comment.repository.entity;
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +21,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String content;
 
 //    @ManyToOne
@@ -37,8 +37,8 @@ public class Comment {
 //    @OneToMany(mappedBy = "todo")
 //    private List<Comment> comments;
 
-    public Comment(Long id, String content, Long userId, Todo todo) {
-        this.id = id;
+    @Builder
+    public Comment(String content, Long userId, Todo todo) {
         this.content = content;
         this.userId = userId;
         this.todo = todo;
