@@ -1,9 +1,9 @@
 package com.sparta.springbasicsolo.domain.file.service;
 
 import com.sparta.springbasicsolo.domain.file.dto.FileResponseDTO;
-import com.sparta.springbasicsolo.exception.FileException;
 import com.sparta.springbasicsolo.domain.file.repository.JpaFileRepository;
 import com.sparta.springbasicsolo.domain.file.repository.entity.Image;
+import com.sparta.springbasicsolo.exception.FileException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.PathResource;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Slf4j

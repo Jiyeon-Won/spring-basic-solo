@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @Entity
@@ -14,24 +15,19 @@ public class Todo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter
     private Long id;
 
-    @Setter
     private String title;
 
-    @Setter
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Setter
     private String person;
 
     private String password;
 
     private LocalDateTime createdDateTime;
 
-    @Setter
     private Boolean isDeleted;
 
     @Builder

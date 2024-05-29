@@ -1,7 +1,5 @@
 package com.sparta.springbasicsolo.domain.comment.dto;
 
-import com.sparta.springbasicsolo.domain.comment.repository.entity.Comment;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

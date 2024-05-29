@@ -1,8 +1,8 @@
 package com.sparta.springbasicsolo.domain.comment.repository.entity;
 
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
+import com.sparta.springbasicsolo.domain.user.repository.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 
 @Getter
 @Setter
@@ -23,9 +22,9 @@ public class Comment {
 
     private String content;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "todo_id")
@@ -38,9 +37,9 @@ public class Comment {
 //    private List<Comment> comments;
 
     @Builder
-    public Comment(String content, Long userId, Todo todo) {
+    public Comment(String content, User user, Todo todo) {
         this.content = content;
-        this.userId = userId;
+        this.user = user;
         this.todo = todo;
         this.createdDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
