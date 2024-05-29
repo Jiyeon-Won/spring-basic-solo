@@ -1,10 +1,10 @@
 package com.sparta.springbasicsolo.domain.todo.service;
 
 import com.sparta.springbasicsolo.domain.todo.dto.TodoRequestDTO;
-import com.sparta.springbasicsolo.exception.DeletedTodoException;
-import com.sparta.springbasicsolo.exception.PasswordNotMatchedException;
 import com.sparta.springbasicsolo.domain.todo.repository.JpaTodoRepository;
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
+import com.sparta.springbasicsolo.exception.DeletedTodoException;
+import com.sparta.springbasicsolo.exception.PasswordNotMatchedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Slf4j
