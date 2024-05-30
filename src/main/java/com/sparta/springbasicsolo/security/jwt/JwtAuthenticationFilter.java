@@ -3,7 +3,7 @@ package com.sparta.springbasicsolo.security.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.springbasicsolo.domain.user.dto.LoginRequestDto;
 import com.sparta.springbasicsolo.domain.user.repository.entity.UserRoleEnum;
-import com.sparta.springbasicsolo.security.UserDetailsImpl;
+import com.sparta.springbasicsolo.security.service.UserDetailsImpl;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,22 +34,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("로그인 시도");
+        LoginRequestDto requestDto;
         try {
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
-
-            return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            requestDto.getUsername(),
-                            requestDto.getPassword(),
-                            null
-                    )
-            );
+            requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
         } catch (IOException e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         } catch (BadCredentialsException e) {
             throw new JwtException("회원을 찾을 수 없습니다.");
         }
+        return getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        requestDto.getUsername(),
+                        requestDto.getPassword(),
+                        null
+                )
+        );
     }
 
     @Override
@@ -58,10 +58,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-        String token = jwtUtil.createJwtToken(username, role);
-        jwtUtil.addJwtToCookie(token, response);
+        String accessToken = jwtUtil.createJwtToken(username, role);
+        String refreshToken = jwtUtil.createRefreshToken(username, role);
+        jwtUtil.addJwtToCookie("access", accessToken, response);
+        jwtUtil.addJwtToCookie("refresh", refreshToken, response);
 
-        response.setHeader("Authorization", token);
+        response.setHeader("Authorization", accessToken);
 //        CommonResponseDTO
         response.setContentType("application/json");
         Map<String, String> map = new HashMap<>();

@@ -9,7 +9,7 @@ import com.sparta.springbasicsolo.domain.comment.repository.entity.Comment;
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import com.sparta.springbasicsolo.domain.todo.service.TodoService;
 import com.sparta.springbasicsolo.domain.user.repository.entity.User;
-import com.sparta.springbasicsolo.security.UserDetailsImpl;
+import com.sparta.springbasicsolo.security.service.UserDetailsImpl;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

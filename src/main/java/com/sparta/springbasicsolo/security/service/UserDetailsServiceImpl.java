@@ -1,4 +1,4 @@
-package com.sparta.springbasicsolo.security;
+package com.sparta.springbasicsolo.security.service;
 
 import com.sparta.springbasicsolo.domain.user.repository.UserRepository;
 import com.sparta.springbasicsolo.domain.user.repository.entity.User;
