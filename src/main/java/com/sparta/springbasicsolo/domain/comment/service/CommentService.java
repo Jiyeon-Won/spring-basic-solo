@@ -50,14 +50,14 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDTO updateComment(CommentActionDTO dto, UserDetailsImpl userDetails) {
+        User loginUser = userDetails.getUser();
+        if (!Objects.equals(loginUser.getId(), dto.getUserId())) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
+
         Todo findTodo = todoService.findById(dto.getTodoId());
         Comment findComment = commentRepository.findById(dto.getCommentId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 댓글 번호입니다."));
-
-        User loginUser = userDetails.getUser();
-        if (!Objects.equals(loginUser.getId(), dto.getUserId())) {
-            throw new JwtException("작성자만 삭제/수정할 수 있습니다.");
-        }
 
         if (!Objects.equals(findComment.getUser().getId(), loginUser.getId())) {
             throw new IllegalArgumentException("선택한 댓글의 사용자가 현재 사용자와 일치하지 않습니다.");
@@ -76,14 +76,14 @@ public class CommentService {
 
     @Transactional
     public void deleteComment(CommentDeleteDTO dto, UserDetailsImpl userDetails) {
+        User loginUser = userDetails.getUser();
+        if (!Objects.equals(loginUser.getId(), dto.getUserId())) {
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
+        }
+
         Todo findTodo = todoService.findById(dto.getTodoId());
         Comment findComment = commentRepository.findById(dto.getCommentId())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 댓글 번호입니다."));
-
-        User loginUser = userDetails.getUser();
-        if (!Objects.equals(loginUser.getId(), dto.getUserId())) {
-            throw new JwtException("작성자만 삭제/수정할 수 있습니다.");
-        }
 
         if (!Objects.equals(findComment.getUser().getId(), loginUser.getId())) {
             throw new IllegalArgumentException("선택한 댓글의 사용자가 현재 사용자와 일치하지 않습니다.");

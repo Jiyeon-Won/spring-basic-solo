@@ -3,8 +3,10 @@ package com.sparta.springbasicsolo.domain.todo.service;
 import com.sparta.springbasicsolo.domain.todo.dto.TodoRequestDTO;
 import com.sparta.springbasicsolo.domain.todo.repository.JpaTodoRepository;
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
+import com.sparta.springbasicsolo.domain.user.repository.entity.User;
 import com.sparta.springbasicsolo.exception.DeletedTodoException;
 import com.sparta.springbasicsolo.exception.PasswordNotMatchedException;
+import com.sparta.springbasicsolo.security.service.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,15 +25,26 @@ public class TodoService {
     private final JpaTodoRepository todoRepository;
 
     @Transactional
-    public Todo addTodo(TodoRequestDTO dto) {
-        Todo todo = dto.toEntity();
+    public Todo addTodo(TodoRequestDTO dto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+
+        if (!dto.getUsername().equals(user.getUsername())) {
+            throw new IllegalArgumentException("로그인한 username과 추가할 username 다르다.");
+        }
+        Todo todo = Todo.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .user(user)
+                .password(dto.getPassword())
+                .build();
+
         return todoRepository.save(todo);
     }
 
     @Transactional(readOnly = true)
     public Todo findById(Long id) {
         Todo findTodo = todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("잘못된 Todo ID입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다."));
         ifDeletedThrow(findTodo.getIsDeleted());
         return findTodo;
     }
@@ -41,28 +55,44 @@ public class TodoService {
         if (todos.isEmpty()) {
             throw new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다.");
         }
-        return todos;
+        return todos.stream().filter(todo -> !todo.getIsDeleted()).toList();
     }
 
     @Transactional
-    public Todo updateTodo(Long id, TodoRequestDTO dto) {
-        Todo findTodo = todoRepository.findById(id)
+    public Todo updateTodo(Long todoId, TodoRequestDTO dto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+
+        if (!user.getUsername().equals(dto.getUsername())) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
+
+        Todo findTodo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다."));
         ifDeletedThrow(findTodo.getIsDeleted());
         ifPasswordNotMatchedThrow(Objects.equals(findTodo.getPassword(), dto.getPassword()));
 
         findTodo.setTitle(dto.getTitle());
         findTodo.setContent(dto.getContent());
-        findTodo.setPerson(dto.getPerson());
+        findTodo.setUser(user);
         return todoRepository.save(findTodo);
     }
 
     @Transactional
-    public void deleteTodo(Long id, String password) {
-        Todo findTodo = todoRepository.findById(id)
+    public void deleteTodo(Long todoId, Long userId, String password, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+
+        if (!Objects.equals(user.getId(), userId)) {
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
+        }
+
+        Todo findTodo = todoRepository.findById(todoId)
                 .orElseThrow(() -> new IllegalArgumentException("요청하신 리소스를 찾을 수 없습니다."));
         ifDeletedThrow(findTodo.getIsDeleted());
         ifPasswordNotMatchedThrow(Objects.equals(findTodo.getPassword(), password));
+
+        if (!password.equals(findTodo.getPassword())) {
+            throw new IllegalArgumentException("password 다르다");
+        }
 
         findTodo.setIsDeleted(true);
         todoRepository.save(findTodo);

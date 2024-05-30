@@ -1,5 +1,6 @@
 package com.sparta.springbasicsolo.domain.todo.repository.entity;
 
+import com.sparta.springbasicsolo.domain.user.repository.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,9 @@ public class Todo {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private String person;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String password;
 
@@ -31,10 +34,10 @@ public class Todo {
     private Boolean isDeleted;
 
     @Builder
-    public Todo(String title, String content, String person, String password) {
+    public Todo(String title, String content, User user, String password) {
         this.title = title;
         this.content = content;
-        this.person = person;
+        this.user = user;
         this.password = password;
         this.createdDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         this.isDeleted = false;

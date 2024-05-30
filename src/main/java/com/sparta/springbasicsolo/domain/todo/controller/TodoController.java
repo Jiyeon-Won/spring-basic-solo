@@ -5,6 +5,7 @@ import com.sparta.springbasicsolo.domain.todo.dto.TodoRequestDTO;
 import com.sparta.springbasicsolo.domain.todo.dto.TodoResponseDTO;
 import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import com.sparta.springbasicsolo.domain.todo.service.TodoService;
+import com.sparta.springbasicsolo.security.service.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,9 +40,12 @@ public class TodoController {
             @ApiResponse(responseCode = "200", description = "일정 저장 성공"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = TodoResponseDTO.class)))
     })
-    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> addTodo(@Valid @RequestBody TodoRequestDTO dto) {
+    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> addTodo(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody TodoRequestDTO dto
+    ) {
         log.info("입력한 todoRequestDTO: {}", dto);
-        Todo savedTodo = todoService.addTodo(dto);
+        Todo savedTodo = todoService.addTodo(dto, userDetails);
         log.info("저장된 todoDTO: {}", savedTodo);
 
         TodoResponseDTO responseDTO = new TodoResponseDTO(savedTodo);
@@ -53,7 +58,7 @@ public class TodoController {
     }
 
     // 단일 일정 조회
-    @GetMapping("/todo/{id}")
+    @GetMapping("/todo/{todoId}")
     @Operation(summary = "todo 단일 조회", description = "id값을 받아 1개의 todo만 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "일정 조회 성공"
@@ -61,8 +66,8 @@ public class TodoController {
             @ApiResponse(responseCode = "401", description = "이미 삭제된 일정입니다."
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class)))
     })
-    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> detail(@PathVariable Long id) {
-        Todo findTodo = todoService.findById(id);
+    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> detail(@PathVariable Long todoId) {
+        Todo findTodo = todoService.findById(todoId);
         log.info("단일 조회 todoDTO: {}", findTodo);
 
         TodoResponseDTO responseDTO = new TodoResponseDTO(findTodo);
@@ -96,7 +101,7 @@ public class TodoController {
     }
 
     // 일정 수정
-    @PutMapping("/todo/{id}")
+    @PutMapping("/todo/{todoId}")
     @Operation(summary = "todo 수정", description = "id값을 받아 1개의 todo 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "일정 수정 성공"
@@ -106,9 +111,13 @@ public class TodoController {
             @ApiResponse(responseCode = "401", description = "비밀 번호가 일치하지 않습니다."
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class)))
     })
-    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> updateTodo(@PathVariable Long id, @Valid @RequestBody TodoRequestDTO dto) {
+    public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> updateTodo(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long todoId,
+            @RequestBody @Valid TodoRequestDTO dto
+    ) {
         log.info("입력한 todoDTO: {}", dto);
-        Todo updateTodo = todoService.updateTodo(id, dto);
+        Todo updateTodo = todoService.updateTodo(todoId, dto, userDetails);
         log.info("수정한 todoDTO: {}", updateTodo);
 
         TodoResponseDTO responseDTO = new TodoResponseDTO(updateTodo);
@@ -121,7 +130,7 @@ public class TodoController {
     }
 
     // 일정 삭제
-    @DeleteMapping(value = "/todo/{id}")
+    @DeleteMapping(value = "/todo/{todoId}")
     @Operation(summary = "todo 삭제", description = "id값을 받아 1개의 todo 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "일정 삭제 성공"
@@ -131,10 +140,15 @@ public class TodoController {
             @ApiResponse(responseCode = "401", description = "비밀 번호가 일치하지 않습니다."
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommonResponseDTO.class)))
     })
-    public ResponseEntity<CommonResponseDTO<Void>> deleteTodo(@PathVariable Long id, @RequestBody Map<String, String> map) {
+    public ResponseEntity<CommonResponseDTO<Void>> deleteTodo(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @PathVariable Long todoId,
+            @RequestBody Map<String, String> map
+    ) {
         String password = map.get("password");
-        log.info("입력한 id:{}, password:{}", id, password);
-        todoService.deleteTodo(id, password);
+        Long userId = Long.valueOf(map.get("userId"));
+        log.info("입력한 todoId:{}, password:{}, userId:{}", todoId, password, userId);
+        todoService.deleteTodo(todoId, userId, password, userDetails);
 
         return ResponseEntity.ok()
                 .body(CommonResponseDTO.<Void>builder()

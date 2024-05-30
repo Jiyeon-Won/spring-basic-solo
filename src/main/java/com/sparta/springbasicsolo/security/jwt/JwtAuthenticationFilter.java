@@ -79,7 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setContentType("application/json");
         Map<String, String> map = new HashMap<>();
-        map.put("message", "토큰이 유효하지 않습니다.");
+        map.put("message", "로그인 실패");
         response.getOutputStream().write(new ObjectMapper().writeValueAsBytes(map));
     }
 }

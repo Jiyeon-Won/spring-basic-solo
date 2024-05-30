@@ -11,7 +11,8 @@ import lombok.Setter;
 public class SignupRequestDto {
 
     @NotBlank
-    private String nickname;
+    @Pattern(regexp = "^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@(?:[a-zA-Z]+\\.)+[a-zA-Z]{2,7}$", message = "이메일 형식이 올바르지 않습니다.")
+    private String email;
     @NotBlank
     @Size(min = 4, max = 10, message = "username을 최소 4자 이상, 10자 이하로 입력해 주세요")
     @Pattern(regexp = "^[a-z0-9]*$", message = "알파벳 소문자(a~z), 숫자(0~9)만 입력해 주세요.")
