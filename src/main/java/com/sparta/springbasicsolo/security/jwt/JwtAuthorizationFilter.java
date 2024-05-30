@@ -1,7 +1,7 @@
 package com.sparta.springbasicsolo.security.jwt;
 
-import com.sparta.springbasicsolo.security.UserDetailsServiceImpl;
-import io.jsonwebtoken.Claims;
+import com.sparta.springbasicsolo.security.service.UserDetailsServiceImpl;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,31 +27,47 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if ("/user/login".equals(request.getRequestURI())
-                || "/user/signup".equals(request.getRequestURI())) {
+        if ("/user/login".equals(request.getRequestURI()) || "/user/signup".equals(request.getRequestURI())) {
             filterChain.doFilter(request, response);
+            return;
         }
 
-        String token = jwtUtil.getTokenFromRequest(request);
-        if (StringUtils.hasText(token)) {
-            token = jwtUtil.substringToken(token);
-            log.info("토큰 확인 = {}", token);
+        String accessToken = jwtUtil.getTokenFromRequest("access", request);
+        String refreshToken = jwtUtil.getTokenFromRequest("refresh", request);
 
-            if (!jwtUtil.validateToken(token)) {
-                log.error("토큰 에러");
-                return;
+        if (StringUtils.hasText(accessToken)) {
+            if (jwtUtil.validateToken(accessToken)) {
+                logic(accessToken);
+            } else {
+                log.info("access 토큰 만료");
+                if (StringUtils.hasText(refreshToken)) {
+                    if (jwtUtil.validateToken(refreshToken)) {
+                        String newAccessToken = jwtUtil.newAccessToken(refreshToken);
+                        jwtUtil.addJwtToCookie("access", newAccessToken, response);
+                        String substringToken = jwtUtil.substringToken(newAccessToken);
+                        logic(substringToken);
+                    } else {
+                        log.info("refresh 토큰 만료");
+                        throw new JwtException("다시 로그인해주세요.");
+                    }
+                } else {
+                    throw new JwtException("다시 로그인해주세요.");
+                }
             }
-            Claims info = jwtUtil.getBodyFromToken(token);
-            String subject = info.getSubject();
-
-            SecurityContext context = SecurityContextHolder.createEmptyContext();
-            UserDetails userDetails = userDetailsService.loadUserByUsername(subject);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            context.setAuthentication(authentication);
-
-            SecurityContextHolder.setContext(context);
+        } else {
+            throw new JwtException("다시 로그인해주세요.");
         }
-
         filterChain.doFilter(request, response);
+    }
+
+    private void logic(String accessToken) {
+        String username = jwtUtil.getUsername(accessToken);
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        context.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(context);
     }
 }

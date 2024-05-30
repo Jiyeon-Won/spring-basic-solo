@@ -1,10 +1,10 @@
 package com.sparta.springbasicsolo.config;
 
-import com.sparta.springbasicsolo.security.UserDetailsServiceImpl;
 import com.sparta.springbasicsolo.security.jwt.JwtAuthenticationFilter;
 import com.sparta.springbasicsolo.security.jwt.JwtAuthorizationFilter;
 import com.sparta.springbasicsolo.security.jwt.JwtExceptionFilter;
 import com.sparta.springbasicsolo.security.jwt.JwtUtil;
+import com.sparta.springbasicsolo.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -64,7 +64,7 @@ public class WebSecurityConfig {
 
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class);
 

@@ -6,7 +6,7 @@ import com.sparta.springbasicsolo.domain.comment.dto.CommentDeleteDTO;
 import com.sparta.springbasicsolo.domain.comment.dto.CommentRequestDTO;
 import com.sparta.springbasicsolo.domain.comment.dto.CommentResponseDTO;
 import com.sparta.springbasicsolo.domain.comment.service.CommentService;
-import com.sparta.springbasicsolo.security.UserDetailsImpl;
+import com.sparta.springbasicsolo.security.service.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
