@@ -31,7 +31,7 @@ public class UserService {
             throw new IllegalArgumentException("중복된 username 입니다.");
         }
 
-        User user = new User(requestDto.getNickname(), username, password, UserRoleEnum.USER);
+        User user = new User(requestDto.getEmail(), username, password, UserRoleEnum.USER);
         userRepository.save(user);
     }
 }

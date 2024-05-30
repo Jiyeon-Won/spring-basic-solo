@@ -15,14 +15,14 @@ public class TodoResponseDTO {
     private Long id;
     private String title;
     private String content;
-    private String person;
+    private String username;
     private LocalDateTime createdDateTime;
 
     public TodoResponseDTO(Todo todo) {
         this.id = todo.getId();
         this.title = todo.getTitle();
         this.content = todo.getContent();
-        this.person = todo.getPerson();
+        this.username = todo.getUser().getUsername();
         this.createdDateTime = todo.getCreatedDateTime();
     }
 }

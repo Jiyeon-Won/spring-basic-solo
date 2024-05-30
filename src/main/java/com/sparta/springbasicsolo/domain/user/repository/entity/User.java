@@ -18,15 +18,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickname;
+    private String email;
     private String username;
     private String password;
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
     private LocalDateTime createdDateTime;
 
-    public User(String nickname, String username, String password, UserRoleEnum role) {
-        this.nickname = nickname;
+    public User(String email, String username, String password, UserRoleEnum role) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.role = role;

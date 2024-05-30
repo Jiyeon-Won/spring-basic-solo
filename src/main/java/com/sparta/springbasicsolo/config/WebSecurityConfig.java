@@ -8,6 +8,7 @@ import com.sparta.springbasicsolo.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,15 +59,18 @@ public class WebSecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests((httpRequests) -> httpRequests
-                .requestMatchers("/comment/**").authenticated()
-                .anyRequest().permitAll()
+                .requestMatchers("/user/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/todo/**").permitAll()
+                .anyRequest().authenticated()
         );
 
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilterAt(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+//        http.exceptionHandling()
 
         return http.build();
     }

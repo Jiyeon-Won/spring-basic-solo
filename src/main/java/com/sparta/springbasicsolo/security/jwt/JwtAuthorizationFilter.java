@@ -27,7 +27,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if ("/user/login".equals(request.getRequestURI()) || "/user/signup".equals(request.getRequestURI())) {
+        String requestUri = request.getRequestURI();
+        if (requestUri.startsWith("/user")
+                || (requestUri.startsWith("/todo") && request.getMethod().equals("GET"))) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -48,14 +50,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                         logic(substringToken);
                     } else {
                         log.info("refresh 토큰 만료");
-                        throw new JwtException("다시 로그인해주세요.");
+                        throw new JwtException("로그인이 필요합니다.");
                     }
                 } else {
-                    throw new JwtException("다시 로그인해주세요.");
+                    throw new JwtException("로그인이 필요합니다.");
                 }
             }
         } else {
-            throw new JwtException("다시 로그인해주세요.");
+            throw new JwtException("로그인이 필요합니다.");
         }
         filterChain.doFilter(request, response);
     }
