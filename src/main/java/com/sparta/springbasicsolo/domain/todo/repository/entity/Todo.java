@@ -1,11 +1,11 @@
 package com.sparta.springbasicsolo.domain.todo.repository.entity;
 
+import com.sparta.springbasicsolo.domain.file.repository.entity.File;
 import com.sparta.springbasicsolo.domain.user.repository.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -27,9 +27,11 @@ public class Todo {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String password;
-
     private LocalDateTime createdDateTime;
+    private LocalDateTime updatedDateTime;
+
+    @OneToOne(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private File file;
 
     private Boolean isDeleted;
 
@@ -38,8 +40,8 @@ public class Todo {
         this.title = title;
         this.content = content;
         this.user = user;
-        this.password = password;
-        this.createdDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.createdDateTime = LocalDateTime.now();
+        this.updatedDateTime = LocalDateTime.now();
         this.isDeleted = false;
     }
 }

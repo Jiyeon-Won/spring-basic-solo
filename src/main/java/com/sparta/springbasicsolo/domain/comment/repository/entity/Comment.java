@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,8 +31,9 @@ public class Comment {
     private Todo todo;
 
     private LocalDateTime createdDateTime;
+    private LocalDateTime updatedDateTime;
 
-    // 필요할 것 같으면 사용
+    // 필요할 것 같으면 사용 ex)대댓글
 //    @OneToMany(mappedBy = "todo")
 //    private List<Comment> comments;
 
@@ -41,6 +42,6 @@ public class Comment {
         this.content = content;
         this.user = user;
         this.todo = todo;
-        this.createdDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.createdDateTime = LocalDateTime.now();
     }
 }

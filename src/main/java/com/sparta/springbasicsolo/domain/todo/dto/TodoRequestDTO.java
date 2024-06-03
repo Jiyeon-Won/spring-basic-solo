@@ -1,9 +1,7 @@
 package com.sparta.springbasicsolo.domain.todo.dto;
 
-import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,8 +22,4 @@ public class TodoRequestDTO {
 
     @Schema(description = "username")
     private String username;
-
-    @Schema(description = "작성한 todo의 비밀번호")
-    @NotBlank(message = "비밀번호를 반드시 입력해 주세요.")
-    private String password;
 }

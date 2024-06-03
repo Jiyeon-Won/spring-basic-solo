@@ -48,10 +48,6 @@ public class JwtUtil {
     }
 
     public String createJwtToken(String username, UserRoleEnum role) {
-//        Claims claims = Jwts.claims();
-//        claims.put("username", username);
-//        claims.put("role", role);
-
         return BEARER_PREFIX +
                 Jwts.builder()
                         .claim("category", "access")
@@ -94,15 +90,12 @@ public class JwtUtil {
         Cookie cookie = new Cookie(key, token);
         cookie.setPath("/");
 
-        // Response 객체에 Cookie 추가
         res.addCookie(cookie);
     }
 
     public String substringToken(String tokenValue) {
         if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
-            String substring = tokenValue.substring(BEARER_PREFIX.length());
-//            return tokenValue.substring(7);
-            return substring;
+            return tokenValue.substring(BEARER_PREFIX.length());
         }
         log.error("Not Found Token");
         throw new NullPointerException("Not Found Token");

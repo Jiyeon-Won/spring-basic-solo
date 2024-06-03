@@ -1,5 +1,6 @@
 package com.sparta.springbasicsolo.config;
 
+import com.sparta.springbasicsolo.domain.file.repository.entity.File;
 import com.sparta.springbasicsolo.security.jwt.JwtAuthenticationFilter;
 import com.sparta.springbasicsolo.security.jwt.JwtAuthorizationFilter;
 import com.sparta.springbasicsolo.security.jwt.JwtExceptionFilter;
@@ -21,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity/*(debug = true)*/
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -64,13 +65,13 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
         );
 
+        File file = new File();
+
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(new JwtExceptionFilter(), JwtAuthorizationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-//        http.exceptionHandling()
 
         return http.build();
     }

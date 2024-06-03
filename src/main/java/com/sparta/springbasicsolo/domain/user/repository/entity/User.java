@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Entity
 @Getter
@@ -30,6 +29,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.role = role;
-        this.createdDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        this.createdDateTime = LocalDateTime.now();
     }
 }
