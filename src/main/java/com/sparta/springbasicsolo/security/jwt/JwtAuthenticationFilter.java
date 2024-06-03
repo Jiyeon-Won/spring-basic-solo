@@ -64,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         jwtUtil.addJwtToCookie("refresh", refreshToken, response);
 
         response.setHeader("Authorization", accessToken);
-//        CommonResponseDTO
+
         response.setContentType("application/json");
         Map<String, String> map = new HashMap<>();
         map.put("message", "로그인 성공");

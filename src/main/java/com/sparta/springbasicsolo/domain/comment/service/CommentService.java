@@ -10,12 +10,12 @@ import com.sparta.springbasicsolo.domain.todo.repository.entity.Todo;
 import com.sparta.springbasicsolo.domain.todo.service.TodoService;
 import com.sparta.springbasicsolo.domain.user.repository.entity.User;
 import com.sparta.springbasicsolo.security.service.UserDetailsImpl;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Slf4j
@@ -64,6 +64,7 @@ public class CommentService {
         }
 
         findComment.setContent(dto.getContent());
+        findComment.setUpdatedDateTime(LocalDateTime.now());
 
         Comment updatedComment = commentRepository.save(findComment);
 

@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -42,10 +43,11 @@ public class TodoController {
     })
     public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> addTodo(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @Valid @RequestBody TodoRequestDTO dto
+            @Valid @RequestPart TodoRequestDTO dto,
+            @RequestPart MultipartFile file
     ) {
-        log.info("입력한 todoRequestDTO: {}", dto);
-        Todo savedTodo = todoService.addTodo(dto, userDetails);
+        log.info("입력한 todoRequestDTO: {}, file: {}", dto, file.getOriginalFilename());
+        Todo savedTodo = todoService.addTodo(dto, file, userDetails);
         log.info("저장된 todoDTO: {}", savedTodo);
 
         TodoResponseDTO responseDTO = new TodoResponseDTO(savedTodo);
@@ -114,10 +116,11 @@ public class TodoController {
     public ResponseEntity<CommonResponseDTO<TodoResponseDTO>> updateTodo(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @PathVariable Long todoId,
-            @RequestBody @Valid TodoRequestDTO dto
+            @RequestPart @Valid TodoRequestDTO dto,
+            @RequestPart MultipartFile file
     ) {
-        log.info("입력한 todoDTO: {}", dto);
-        Todo updateTodo = todoService.updateTodo(todoId, dto, userDetails);
+        log.info("입력한 todoDTO: {}, file: {}", dto, file.getOriginalFilename());
+        Todo updateTodo = todoService.updateTodo(todoId, dto, file, userDetails);
         log.info("수정한 todoDTO: {}", updateTodo);
 
         TodoResponseDTO responseDTO = new TodoResponseDTO(updateTodo);
@@ -145,10 +148,9 @@ public class TodoController {
             @PathVariable Long todoId,
             @RequestBody Map<String, String> map
     ) {
-        String password = map.get("password");
         Long userId = Long.valueOf(map.get("userId"));
-        log.info("입력한 todoId:{}, password:{}, userId:{}", todoId, password, userId);
-        todoService.deleteTodo(todoId, userId, password, userDetails);
+        log.info("입력한 todoId:{}, userId:{}", todoId, userId);
+        todoService.deleteTodo(todoId, userId, userDetails);
 
         return ResponseEntity.ok()
                 .body(CommonResponseDTO.<Void>builder()

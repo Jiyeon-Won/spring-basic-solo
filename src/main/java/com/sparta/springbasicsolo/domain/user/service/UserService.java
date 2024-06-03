@@ -23,7 +23,6 @@ public class UserService {
 
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
-//        String password = requestDto.getPassword();
         String password = passwordEncoder.encode(requestDto.getPassword());
 
         Optional<User> byUsername = userRepository.findByUsername(username);
